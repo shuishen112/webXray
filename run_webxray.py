@@ -106,8 +106,8 @@ def auto_collection():
 	for d in rank_db_dict:
 		db_name = rank_db_dict[d]
 		pages_file_name = d
-		sql_driver.create_wbxr_db(db_name)
-		sql_driver.set_config(config)
+		# sql_driver.create_wbxr_db(db_name)
+		# sql_driver.set_config(config)
 		print("collecting: {} begin".format(d))
 		collect(db_name,d)
 		print("collecting: {} finished".format(d))
