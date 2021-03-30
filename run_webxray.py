@@ -20,7 +20,7 @@ import urllib.parse
 import urllib.request
 
 # set up database connection
-db_engine = 'sqlite'
+db_engine = 'postgres'
 if db_engine == 'sqlite':
 	from webxray.SQLiteDriver import SQLiteDriver
 	sql_driver = SQLiteDriver()

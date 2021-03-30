@@ -1,4 +1,3 @@
-# list of example pages
 http://adobe.com
 http://alibaba.com
 http://amazon.com
