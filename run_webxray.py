@@ -86,7 +86,7 @@ def get_countrys():
 		
 	files = os.listdir('page_lists/')
 	print(files)
-	country_list = ['AD', 'AL', 'AT', 'BA', 'BE', 'BG', 'BY', 'CH', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FO', 'FR', 'GB', 'GG', 'GI', 'GR', 'HR', 'HU', 'IE', 'IM', 'IS', 'IT', 'JE', 'LI', 'LT', 'LU', 'LV', 'MC', 'MD', 'ME', 'MK', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'RS', 'RU', 'SE', 'SI', 'SJ', 'SK', 'SM', 'UA']
+	country_list = ['AD', 'AL', 'AT', 'BA', 'BE', 'BG', 'BY', 'CH', 'CZ', 'DE', 'EE', 'ES', 'FI', 'FO', 'FR', 'GB', 'GG', 'GI', 'GR', 'HR', 'HU', 'IE', 'IM', 'IS', 'JE', 'LI', 'LT', 'LU', 'LV', 'MC', 'MD', 'MK', 'MT', 'NO', 'PL', 'PT', 'RO', 'RS', 'RU', 'SE', 'SI', 'SJ', 'SK', 'SM', 'UA']
 	collect_dict = dict()
 	
 	for f in files:
@@ -642,7 +642,7 @@ if __name__ == '__main__':
 		dest='auto_collect',
 		help='collect the dataset from region'
 	)
-	
+
 	(options, args) = parser.parse_args()
 
 	# set mode
