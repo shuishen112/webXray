@@ -82,6 +82,36 @@ def quit():
 	exit()
 # quit
 
+def get_countrys():
+		
+	files = os.listdir('page_lists/')
+	print(files)
+	country_list = ['AD', 'AL', 'AT', 'BA', 'BE', 'BG', 'BY', 'CH', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI', 'FO', 'FR', 'GB', 'GG', 'GI', 'GR', 'HR', 'HU', 'IE', 'IM', 'IS', 'IT', 'JE', 'LI', 'LT', 'LU', 'LV', 'MC', 'MD', 'ME', 'MK', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'RS', 'RU', 'SE', 'SI', 'SJ', 'SK', 'SM', 'UA']
+	collect_dict = dict()
+	
+	for f in files:
+		fields = f.split('.')[0].split('_')
+		if len(fields) != 3:
+			continue
+		country_code = fields[-1]
+		if country_code in country_list:			
+			collect_dict[f] = country_code.lower()+"_top_1000"
+	return collect_dict
+
+def auto_collection():
+	"""
+	auto collect datasets for some region
+	"""
+	rank_db_dict = get_countrys()
+	for d in rank_db_dict:
+		db_name = rank_db_dict[d]
+		pages_file_name = d
+		sql_driver.create_wbxr_db(db_name)
+		sql_driver.set_config(config)
+		print("collecting: {} begin".format(d))
+		collect(db_name,d)
+		print("collecting: {} finished".format(d))
+	# collect(db_name, pages_file_name)
 def interaction():
 	"""
 	Handles user interaction, alternative to command line flags, good
@@ -528,14 +558,14 @@ def run_client():
 
 if __name__ == '__main__':
 	print('''   
-               _   __  __                
+			   _   __  __                
  __      _____| |__\ \/ /_ __ __ _ _   _ 
  \ \ /\ / / _ \ '_ \\\\  /| '__/ _` | | | |
   \ V  V /  __/ |_) /  \| | | (_| | |_| |
    \_/\_/ \___|_.__/_/\_\_|  \__,_|\__, |
-                                   |___/
+								   |___/
 		[Forensic Edition v1.0]
-    ''')
+	''')
 
 	# set up cli args
 	parser = optparse.OptionParser()
@@ -605,6 +635,14 @@ if __name__ == '__main__':
 		dest='run_client',
 		help='Runs the distributed client'
 	)
+
+	parser.add_option(
+		'--auto_collect',
+		action='store_true',
+		dest='auto_collect',
+		help='collect the dataset from region'
+	)
+	
 	(options, args) = parser.parse_args()
 
 	# set mode
@@ -630,12 +668,16 @@ if __name__ == '__main__':
 		mode = 'rate_estimate'
 	elif options.run_client:
 		mode = 'run_client'
+	elif options.auto_collect:
+		mode = 'auto_collect'
 	else:
 		mode = 'interactive'
 
 	# do what we're supposed to do		
 	if mode == 'interactive':
 		interaction()
+	elif mode == 'auto_collect':
+		auto_collection()
 	elif mode == 'scan_pages':
 		try:
 			db_name 		= args[0]
