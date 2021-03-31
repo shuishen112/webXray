@@ -85,8 +85,8 @@ def quit():
 def get_countrys():
 		
 	files = os.listdir('page_lists/')
-	print(files)
-	country_list = ['AD', 'AL', 'AT', 'BA', 'BE', 'BG', 'BY', 'CH', 'CZ', 'DE', 'EE', 'ES', 'FI', 'FO', 'FR', 'GB', 'GG', 'GI', 'GR', 'HR', 'HU', 'IE', 'IM', 'IS', 'JE', 'LI', 'LT', 'LU', 'LV', 'MC', 'MD', 'MK', 'MT', 'NO', 'PL', 'PT', 'RO', 'RS', 'RU', 'SE', 'SI', 'SJ', 'SK', 'SM', 'UA']
+	# print(files)
+	# country_list = ['AD', 'AL', 'AT', 'BA', 'BE', 'BG', 'BY', 'CH', 'CZ', 'DE', 'EE', 'ES', 'FI', 'FO', 'FR', 'GB', 'GG', 'GI', 'GR', 'HR', 'HU', 'IE', 'IM', 'IS', 'JE', 'LI', 'LT', 'LU', 'LV', 'MC', 'MD', 'MK', 'MT', 'NO', 'PL', 'PT', 'RO', 'RS', 'RU', 'SE', 'SI', 'SJ', 'SK', 'SM', 'UA']
 	collect_dict = dict()
 	
 	for f in files:
@@ -94,8 +94,8 @@ def get_countrys():
 		if len(fields) != 3:
 			continue
 		country_code = fields[-1]
-		if country_code in country_list:			
-			collect_dict[f] = country_code.lower()+"_top_1000"
+		# if country_code in country_list:			
+		collect_dict[f] = country_code.lower()+"_top_1000"
 	return collect_dict
 
 def auto_collection():
