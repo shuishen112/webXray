@@ -52,7 +52,7 @@ utilities.check_dependencies()
 #	all site content on your machine.  Advanced users can either
 #	edit config details directly in the database or create their
 #	own custom config in Utilities.py.
-config = utilities.get_default_config('haystack')
+config = utilities.get_default_config('forensic')
 
 # SET NUMBER OF PARALLEL BROWSING ENGINES
 #
