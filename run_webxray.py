@@ -62,7 +62,7 @@ utilities.check_dependencies()
 #	all site content on your machine.  Advanced users can either
 #	edit config details directly in the database or create their
 #	own custom config in Utilities.py.
-config = utilities.get_default_config('haystack')
+config = utilities.get_default_config('forensic')
 
 # Set the client_id based on the hostname, you can put in 
 #	 a custom value of your choosing as well.
