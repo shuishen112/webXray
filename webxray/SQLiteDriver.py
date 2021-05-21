@@ -1717,8 +1717,8 @@ class SQLiteDriver:
 		"""
 		Deletes all cluster data.
 		"""
-		self.db.execute('TRUNCATE cluster')
-		self.db.execute('TRUNCATE page_cluster_junction')
+		self.db.execute('DELETE FROM cluster')
+		self.db.execute('DELETE FROM page_cluster_junction')
 	# clear_clusters
 
 	def add_cluster(self,cluster):
@@ -1780,7 +1780,7 @@ class SQLiteDriver:
 		when the domain ownership is updated it is neccessary to flush existing mappings
 		by first resetting all the domain owner records then clear the domain_owner db
 		"""
-		self.db.execute('TRUNCATE policy_request_disclosure')
+		self.db.execute('DELETE FROM policy_request_disclosure')
 		self.db.execute('UPDATE domain SET domain_owner_id = NULL')
 		self.db.execute('UPDATE crawl_id_domain_lookup SET domain_owner_id = NULL')
 		self.db.execute('UPDATE page_id_domain_lookup SET domain_owner_id = NULL')
@@ -2948,8 +2948,10 @@ class SQLiteDriver:
 				browser_prewait,
 				start_url,
 				start_url_md5,
+				start_url_domain_id,
 				final_url,
 				final_url_md5,
+				final_url_domain_id,
 				title,
 				meta_desc,
 				lang,
@@ -2983,6 +2985,8 @@ class SQLiteDriver:
 				?,
 				?,
 				?,
+				?,
+				?,
 				?
 			) ON CONFLICT DO NOTHING""",
 			(
@@ -2993,8 +2997,10 @@ class SQLiteDriver:
 				policy['browser_prewait'],
 				policy['start_url'],
 				self.md5_text(policy['start_url']),
+				policy['start_url_domain_id'],
 				policy['final_url'],
 				self.md5_text(policy['final_url']),
+				policy['final_url_domain_id'],
 				policy['title'],
 				policy['meta_desc'],
 				policy['lang'],
@@ -3366,19 +3372,16 @@ class SQLiteDriver:
 		Note that this is distinct on the page id to avoid over-counting for
 			subsidiaries.
 		"""
-		
 		if child_owner_ids:
-			query = f"SELECT COUNT(DISTINCT crawl_id) FROM crawl_id_domain_lookup WHERE (domain_owner_id = '{owner_id}' OR "
+			query = f"SELECT COUNT(DISTINCT page_id) FROM policy_request_disclosure WHERE (request_owner_id = '{owner_id}' OR "
 			for child_owner_id in child_owner_ids:
-				query += f"domain_owner_id = '{child_owner_id}' OR "
+				query += f"request_owner_id = '{child_owner_id}' OR "
 			query = query[:-4] + ")"
 		else:
-			query = "SELECT COUNT(DISTINCT crawl_id) FROM crawl_id_domain_lookup"
+			query = f"SELECT COUNT(DISTINCT page_id) FROM policy_request_disclosure where request_owner_id = '{owner_id}'"
 
-		if disclosed and child_owner_ids:
-			query += " AND is_disclosed IS TRUE"
-		elif disclosed:
-			query += " WHERE is_disclosed IS TRUE"
+		if disclosed:
+			query += " AND disclosed IS TRUE"
 
 		self.db.execute(query)
 		return self.db.fetchone()[0]

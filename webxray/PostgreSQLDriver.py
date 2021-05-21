@@ -26,9 +26,9 @@ class PostgreSQLDriver:
 		"""
 
 		# modify this per your install
-		self.db_user = 'postgres'
-		self.db_pass = 'tn7509TNB'
-		self.db_host = 'privacylost.c8vzw9omfzra.ap-northeast-2.rds.amazonaws.com'
+		self.db_user = 'user'
+		self.db_pass = 'password'
+		self.db_host = 'localhost'
 		self.db_port = '5432'
 
 		# the db_prefix can be overridden if you like
@@ -3159,8 +3159,10 @@ class PostgreSQLDriver:
 				browser_prewait,
 				start_url,
 				start_url_md5,
+				start_url_domain_id,
 				final_url,
 				final_url_md5,
+				final_url_domain_id,
 				title,
 				meta_desc,
 				lang,
@@ -3182,7 +3184,9 @@ class PostgreSQLDriver:
 				%s,
 				MD5(%s),
 				%s,
+				%s,
 				MD5(%s),
+				%s,
 				%s,
 				%s,
 				%s,
@@ -3204,8 +3208,10 @@ class PostgreSQLDriver:
 				policy['browser_prewait'],
 				policy['start_url'],
 				policy['start_url'],
+				policy['start_url_domain_id'],
 				policy['final_url'],
 				policy['final_url'],
+				policy['final_url_domain_id'],
 				policy['title'],
 				policy['meta_desc'],
 				policy['lang'],
@@ -3597,17 +3603,15 @@ class PostgreSQLDriver:
 		"""
 		
 		if child_owner_ids:
-			query = f"SELECT COUNT(DISTINCT crawl_id) FROM crawl_id_domain_lookup WHERE (domain_owner_id = '{owner_id}' OR "
+			query = f"SELECT COUNT(DISTINCT page_id) FROM policy_request_disclosure WHERE (request_owner_id = '{owner_id}' OR "
 			for child_owner_id in child_owner_ids:
-				query += f"domain_owner_id = '{child_owner_id}' OR "
+				query += f"request_owner_id = '{child_owner_id}' OR "
 			query = query[:-4] + ")"
 		else:
-			query = "SELECT COUNT(DISTINCT crawl_id) FROM crawl_id_domain_lookup"
+			query = f"SELECT COUNT(DISTINCT page_id) FROM policy_request_disclosure where request_owner_id = '{owner_id}'"
 
-		if disclosed and child_owner_ids:
-			query += " AND is_disclosed IS TRUE"
-		elif disclosed:
-			query += " WHERE is_disclosed IS TRUE"
+		if disclosed:
+			query += " AND disclosed IS TRUE"
 
 		self.db.execute(query)
 		return self.db.fetchone()[0]

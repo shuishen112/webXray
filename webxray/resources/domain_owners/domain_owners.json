@@ -5273,9 +5273,7 @@
 			"id"							: "at_t",
 			"parent_id"						: null,
 			"name"							: "AT&T",
-			"aliases"						: [
-				"att"
-			],
+			"aliases"						: [],
 			"homepage_url"					: "https://att.com",
 			"homepage_meta_desc"			: null,
 			"site_privacy_policy_urls"		: [

@@ -13,7 +13,7 @@ class Analyzer:
 	This class performs analysis of our data.
 	"""
 
-	def __init__(self,db_name,db_engine):
+	def __init__(self,db_name,db_engine, flush_domain_owners):
 
 		# set up global db connection
 		if db_engine == 'sqlite':
@@ -35,6 +35,10 @@ class Analyzer:
 
 		# initialize the domain owner dict
 		self.domain_owners = self.utilities.get_domain_owner_dict()
+
+		# update domain owners
+		if flush_domain_owners:
+			self.patch_domain_owners()
 
 		# load to memory for faster processing, make sure you
 		#	have enough RAM!
@@ -69,9 +73,6 @@ class Analyzer:
 		  the database with domain ownership records we have stored previously
 		"""
 
-		# temporary
-		return
-
 		# we first clear out what is the db in case the new data has changed, 
 		# 	on big dbs takes a while
 		print('\tFlushing extant domain owner data...', end='', flush=True)
@@ -86,21 +87,17 @@ class Analyzer:
 			# skipping for now, but perhaps find a way to enter this in db?
 			if 'revision_date' in item: continue
 
-			self.sql_driver.add_domain_owner(
-				item['id'], 
-				item['parent_id'],
-				item['name'],
-				json.dumps(item['aliases']),
-				item['homepage_url'],
-				json.dumps(item['site_privacy_policy_urls']),
-				json.dumps(item['service_privacy_policy_urls']),
-				json.dumps(item['gdpr_statement_urls']),
-				json.dumps(item['terms_of_use_urls']),
-				json.dumps(item['platforms']),
-				json.dumps(item['uses']),
-				item['notes'], 
-				item['country']
-			)
+			# convert lists to strings for db storage
+			item['aliases'] 					= json.dumps(item['aliases'])
+			item['site_privacy_policy_urls'] 	= json.dumps(item['site_privacy_policy_urls'])
+			item['service_privacy_policy_urls'] = json.dumps(item['service_privacy_policy_urls'])
+			item['gdpr_statement_urls'] 		= json.dumps(item['gdpr_statement_urls'])
+			item['terms_of_use_urls'] 			= json.dumps(item['terms_of_use_urls'])
+			item['platforms'] 					= json.dumps(item['platforms'])
+			item['uses']						= json.dumps(item['uses'])
+
+
+			self.sql_driver.add_domain_owner(item)
 
 			for domain in item['domains']:
 				self.sql_driver.update_domain_owner(item['id'], domain)
@@ -1050,8 +1047,10 @@ class Analyzer:
 
 	def update_crawl_disclosure(self):
 		"""
-		REDOING THIS FOR CRAWLS
+		Leaving code here in case useful later, but it doesn't make sense in cases where 
+			crawls are from different sites so it's staying dormant for now.
 		"""
+		
 		# set up dictionaries so we can pull in the policy_id and policy_text for each page
 		crawl_id_to_policy_id_text = {}
 		for crawl_id, policy_id, policy_text in self.sql_driver.get_crawl_id_policy_id_policy_text():

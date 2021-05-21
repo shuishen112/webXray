@@ -78,7 +78,7 @@ class ChromeDriver:
 		chrome_cmd += '--remote-debugging-port=%s' % port
 
 		# sets up blank profile
-		chrome_cmd += ' --guest '
+		chrome_cmd += ' --guest'
 
 		# not sure this really does anything
 		chrome_cmd += ' --disable-gpu'

@@ -13,7 +13,7 @@ import time
 import urllib.parse
 import urllib.request
 
-# custom browser driver
+
 from webxray.ChromeDriver import ChromeDriver
 
 class Client:

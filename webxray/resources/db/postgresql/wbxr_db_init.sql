@@ -483,8 +483,10 @@ CREATE INDEX index_page_link_junction_link_id ON page_link_junction(link_id);
 -- 	browser_prewait BIGINT,
 -- 	start_url TEXT,
 -- 	start_url_md5 TEXT,
+-- 	start_url_domain_id BIGINT REFERENCES domain(id),
 -- 	final_url TEXT,
 -- 	final_url_md5 TEXT,
+-- 	final_url_domain_id BIGINT REFERENCES domain(id),
 -- 	title TEXT,
 -- 	meta_desc TEXT,
 -- 	lang TEXT,
@@ -501,7 +503,7 @@ CREATE INDEX index_page_link_junction_link_id ON page_link_junction(link_id);
 -- 	added TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
 -- 	UNIQUE (start_url_md5, page_text_id)
 -- );
-CREATE TABLE policy(id BIGSERIAL PRIMARY KEY,client_id TEXT,client_timezone TEXT,client_ip TEXT,browser_type TEXT,browser_version TEXT,browser_prewait BIGINT,start_url TEXT,start_url_md5 TEXT,final_url TEXT,final_url_md5 TEXT,title TEXT,meta_desc TEXT,lang TEXT,fk_score NUMERIC,fre_score NUMERIC,type TEXT,match_term TEXT,match_text TEXT,match_text_type TEXT,confidence BIGINT DEFAULT 0,page_text_id BIGINT,page_source_md5 TEXT,accessed TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,added TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,UNIQUE (start_url_md5, page_text_id));
+CREATE TABLE policy(id BIGSERIAL PRIMARY KEY,client_id TEXT,client_timezone TEXT,client_ip TEXT,browser_type TEXT,browser_version TEXT,browser_prewait BIGINT,start_url TEXT,start_url_md5 TEXT,start_url_domain_id BIGINT REFERENCES domain(id),final_url TEXT,final_url_md5 TEXT,final_url_domain_id BIGINT REFERENCES domain(id),title TEXT,meta_desc TEXT,lang TEXT,fk_score NUMERIC,fre_score NUMERIC,type TEXT,match_term TEXT,match_text TEXT,match_text_type TEXT,confidence BIGINT DEFAULT 0,page_text_id BIGINT,page_source_md5 TEXT,accessed TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,added TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,UNIQUE (start_url_md5, page_text_id));
 -- CREATE INDEX index_policy_start_url_md5 	ON policy(start_url_md5);
 -- CREATE INDEX index_policy_final_url_md5 	ON policy(final_url_md5);
 CREATE INDEX index_policy_title 			ON policy USING GIN(title gin_trgm_ops);

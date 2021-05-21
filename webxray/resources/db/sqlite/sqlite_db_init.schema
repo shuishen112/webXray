@@ -423,8 +423,10 @@ CREATE TABLE page_link_junction(page_id BIGINT,link_id BIGINT,UNIQUE (page_id, l
 -- 	browser_prewait BIGINT,
 -- 	start_url TEXT,
 -- 	start_url_md5 TEXT,
+-- 	start_url_domain_id BIGINT REFERENCES domain(id),
 -- 	final_url TEXT,
 -- 	final_url_md5 TEXT,
+-- 	final_url_domain_id BIGINT REFERENCES domain(id),
 -- 	title TEXT,
 -- 	meta_desc TEXT,
 -- 	lang TEXT,
@@ -441,7 +443,7 @@ CREATE TABLE page_link_junction(page_id BIGINT,link_id BIGINT,UNIQUE (page_id, l
 -- 	added TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
 -- 	UNIQUE (start_url_md5, page_text_id)
 -- );
-CREATE TABLE policy(id INTEGER PRIMARY KEY,client_id TEXT,client_timezone TEXT,client_ip TEXT,browser_type TEXT,browser_version TEXT,browser_prewait BIGINT,start_url TEXT,start_url_md5 TEXT,final_url TEXT,final_url_md5 TEXT,title TEXT,meta_desc TEXT,lang TEXT,fk_score NUMERIC,fre_score NUMERIC,type TEXT,match_term TEXT,match_text TEXT,match_text_type TEXT,confidence BIGINT DEFAULT 0,page_text_id BIGINT,page_source_md5 TEXT,accessed TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,added TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,UNIQUE (start_url_md5, page_text_id));
+CREATE TABLE policy(id INTEGER PRIMARY KEY,client_id TEXT,client_timezone TEXT,client_ip TEXT,browser_type TEXT,browser_version TEXT,browser_prewait BIGINT,start_url TEXT,start_url_md5 TEXT,start_url_domain_id BIGINT REFERENCES domain(id),final_url TEXT,final_url_md5 TEXT,final_url_domain_id BIGINT REFERENCES domain(id),title TEXT,meta_desc TEXT,lang TEXT,fk_score NUMERIC,fre_score NUMERIC,type TEXT,match_term TEXT,match_text TEXT,match_text_type TEXT,confidence BIGINT DEFAULT 0,page_text_id BIGINT,page_source_md5 TEXT,accessed TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,added TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,UNIQUE (start_url_md5, page_text_id));
 ----------------------------
 --- PAGE_POLICY_JUNCTION ---
 ----------------------------

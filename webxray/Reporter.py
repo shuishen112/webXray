@@ -17,7 +17,7 @@ class Reporter:
 	Manages the production of a number of CSV reports.
 	"""
 
-	def __init__(self, db_name, db_engine, num_tlds, num_results, tracker_threshold = None, flush_domain_owners = True, start_date = False, end_date = False):
+	def __init__(self, db_name, db_engine, num_tlds, num_results, tracker_threshold = None, flush_domain_owners = False, start_date = False, end_date = False):
 		"""
 		This performs a few start-up tasks:
 			- sets up some useful global variables
@@ -38,7 +38,7 @@ class Reporter:
 		self.utilities 			= Utilities(db_name, db_engine)
 
 		# set up the analyzer we will be using throughout
-		self.analyzer			= Analyzer(db_name, db_engine)
+		self.analyzer			= Analyzer(db_name, db_engine, flush_domain_owners)
 		
 		# number of decimal places to round to in reports
 		self.num_decimals		= 2
@@ -710,13 +710,11 @@ class Reporter:
 		"""
 		Run various pre-production steps.
 		"""
-
 		print('\t====================================')
 		print('\t Updating 3p Domain Disclosure Data ')
 		print('\t====================================')
 
-		#self.analyzer.update_request_disclosure()
-		self.analyzer.update_crawl_disclosure()
+		self.analyzer.update_request_disclosure()
 
 		print('\t\t...done!')
 
@@ -773,7 +771,7 @@ class Reporter:
 				self.analyzer.get_average_policy_word_count(policy_type=policy_type['type']),
 				readability_scores['ave_fkg'],
 				readability_scores['ave_fre'],
-				self.analyzer.get_percent_crawl_3p_domains_disclosed(policy_type=policy_type['type'])
+				self.analyzer.get_percent_3p_requests_disclosed(policy_type=policy_type['type'])
 			))
 			print('done!')
 

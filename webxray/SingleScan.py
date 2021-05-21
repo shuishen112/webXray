@@ -49,17 +49,14 @@ class SingleScan:
 		print('\t - Browser max wait time is %s seconds' % config['client_max_wait'])
 
 		# make sure it is an http(s) address
-		# if not re.match('^https?://', url): 
-		# 	print('\tNot a valid url, aborting')
-		# 	return None
+		if not re.match('^https?://', url): 
+			print('\tNot a valid url, aborting')
+			return None
 
 		# import and set up specified browser driver
 		if config['client_browser_type'] == 'chrome':
 			from webxray.ChromeDriver	import ChromeDriver
 			browser_driver 	= ChromeDriver(config)
-		# elif config['client_browser_type'] == 'basic':
-		# 	from webxray.BasicDriver	import BasicDriver
-		# 	browser_driver = BasicDriver(config)
 		else:
 			print('INVALID BROWSER TYPE FOR %s, QUITTING!' % config['client_browser_type'])
 			exit()

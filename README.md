@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-03-29 20:14:44
- * @LastEditTime: 2021-04-11 09:44:14
+ * @LastEditTime: 2021-05-21 16:29:42
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /webXray/README.md
@@ -70,5 +70,4 @@ aws s3 cp yourfile s3://yourS3bucket
 ## Upload your dataset to Amazon PostgreSQL database
 
 It is convenient for you to have a open database so that everyone can use it directly. Amazon PostgreSQL DB instance is a goodl choice.
-
 

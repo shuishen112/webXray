@@ -24,9 +24,19 @@ db_engine = 'postgres'
 if db_engine == 'sqlite':
 	from webxray.SQLiteDriver import SQLiteDriver
 	sql_driver = SQLiteDriver()
+
+	# pool_size sets how many parellel processes are run
+	#	when using sqlite we set to 1 to avoid issues with
+	#	multiple processes trying to use sqlite.
+	pool_size = 1
 elif db_engine == 'postgres':
 	from webxray.PostgreSQLDriver import PostgreSQLDriver
 	sql_driver = PostgreSQLDriver()
+
+	# if we are using postgres the database can handle many
+	#	connections so we set pool_size to None which sets up
+	#	one process per processor core
+	pool_size = None
 else:
 	print('INVALID DB ENGINE FOR %s, QUITTING!' % db_engine)
 	quit()
@@ -53,15 +63,6 @@ utilities.check_dependencies()
 #	edit config details directly in the database or create their
 #	own custom config in Utilities.py.
 config = utilities.get_default_config('haystack')
-
-# SET NUMBER OF PARALLEL BROWSING ENGINES
-#
-# 'pool_size' sets how many browser processes get run in parallel, 
-#	by default it is set to 1 so no parallel processes are run.
-#	Setting this to 'None' will use all available cores on your
-#	machine.
-pool_size = None
-
 
 # Set the client_id based on the hostname, you can put in 
 #	 a custom value of your choosing as well.
@@ -192,7 +193,10 @@ def interaction():
 			print('\tThe following webXray databases are available:')
 			
 			db_name = utilities.select_wbxr_db()
-			print('\tUsing database: %s' % db_name)
+			if db_name:
+				print('\tUsing database: %s' % db_name)
+			else:
+				quit()
 		
 		# we have selected the db to use, now move on to collection	
 		print('\t--------------------')
@@ -261,6 +265,10 @@ def interaction():
 		print('\t----------------------------------------------')
 		
 		db_name = utilities.select_wbxr_db()
+		if db_name:
+			print('\tUsing database: %s' % db_name)
+		else:
+			quit()
 
 		print('\tUsing database: %s' % db_name)
 
@@ -280,6 +288,10 @@ def interaction():
 		print('\t----------------------------------------------')
 		
 		db_name = utilities.select_wbxr_db()
+		if db_name:
+			print('\tUsing database: %s' % db_name)
+		else:
+			quit()
 
 		print('\tUsing database: %s' % db_name)
 
@@ -299,6 +311,10 @@ def interaction():
 		print('\t----------------------------------------------')
 		
 		db_name = utilities.select_wbxr_db()
+		if db_name:
+			print('\tUsing database: %s' % db_name)
+		else:
+			quit()
 
 		print('\tUsing database: %s' % db_name)
 
@@ -439,7 +455,7 @@ def analyze(db_name):
 	num_results	= 500
 
 	# set up a new reporter
-	reporter = Reporter(db_name, db_engine, num_tlds, num_results, flush_domain_owners=True)
+	reporter = Reporter(db_name, db_engine, num_tlds, num_results, flush_domain_owners=False)
 
 	# this is the main suite of reports, comment out those you don't need
 	reporter.generate_db_summary_report()
@@ -467,7 +483,7 @@ def single(url):
 
 	from webxray.SingleScan import SingleScan
 	single_scan = SingleScan()
-	single_scan.execute(url, haystack_config)
+	single_scan.execute(url, config)
 # single
 
 def policy_report(db_name):
@@ -488,7 +504,7 @@ def policy_report(db_name):
 	num_results	= 100
 
 	# set up a new reporter
-	reporter = Reporter(db_name, db_engine, num_tlds, num_results, flush_domain_owners=True)
+	reporter = Reporter(db_name, db_engine, num_tlds, num_results, flush_domain_owners=False)
 
 	# do relevant policy reports
 	reporter.initialize_policy_reports()
@@ -552,7 +568,7 @@ def run_client():
 
 	"""
 	from webxray.Client import Client
-	client = Client('https://wbxrcac.andrew.cmu.edu', pool_size=pool_size)
+	client = Client('YOUR_SERVER_URL')
 	client.run_client()
 # run_client
 

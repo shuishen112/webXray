@@ -1052,11 +1052,44 @@ class OutputStore:
 			if policy['fk_score'] <= 0:
 				policy['fk_score'] = None
 
+			if self.debug: print('going to parse urls')
+			start_url_domain_info = self.url_parser.get_parsed_domain_info(policy['start_url'])
+			if start_url_domain_info['success'] == False:
+				err_msg = 'unable to parse start_url_domain_info info for %s with error %s' % (browser_output['start_url'], start_url_domain_info['result'])
+				if self.debug: print(err_msg)
+				self.sql_driver.log_error({
+					'client_id'		: client_id, 
+					'target'		: start_url, 
+					'task'			: 'output_store',
+					'msg'			: err_msg
+				})
+				return {'success': False, 'result': 'could not parse start_url'}
+			else:
+				# add start_url domain and get id
+				policy['start_url_domain_id'] = self.sql_driver.add_domain(start_url_domain_info['result'])
+
+			final_url_domain_info = self.url_parser.get_parsed_domain_info(policy['final_url'])
+			if final_url_domain_info['success'] == False:
+				err_msg = 'unable to parse final_url_domain_info info for %s with error %s' % (browser_output['final_url'], final_url_domain_info['result'])
+				if self.debug: print(err_msg)
+				self.sql_driver.log_error({
+					'client_id'		: client_id, 
+					'target'		: final_url, 
+					'task'			: 'output_store',
+					'msg'			: err_msg
+				})
+				return {'success': False, 'result': 'could not parse final_url'}
+			else:
+				# add final_url domain and get id
+				policy['final_url_domain_id'] = self.sql_driver.add_domain(final_url_domain_info['result'])
+
 			if self.debug: print('going to store policy')
+			
 			# add to db and get id for this policy
 			policy_id  = self.sql_driver.add_policy(policy)
 
 			if self.debug: print('going to link policy to pages')
+
 			# attach policy to all links with this url, not we can filter
 			#	do only do internal links
 			for page_id, crawl_id in self.sql_driver.get_page_ids_from_link_url(policy['start_url'],internal_links_only=True):

@@ -173,8 +173,7 @@ class Utilities:
 		if len(wbxr_dbs) == 0:
 			print('''\t\tThere are no databases to analyze, please try [C]ollecting data or 
 					import an existing wbxr-formatted database manually.''')
-			interaction()
-			return
+			return False
 
 		for index,db_name in enumerate(wbxr_dbs):
 			print('\t\t[%s] %s' % (index, db_name))
