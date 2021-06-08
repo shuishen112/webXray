@@ -606,16 +606,22 @@ class Analyzer:
 			if owner_id != None:
 				owner_name 		= self.domain_owners[owner_id]['owner_name']
 				owner_country 	= self.domain_owners[owner_id]['country']
+				owner_uses = self.domain_owners[owner_id]['uses']
+				owner_platforms = self.domain_owners[owner_id]['platforms']
 			else:
 				owner_name 		= None
 				owner_country 	= None
+				owner_uses = None
+				owner_platforms = None
 
 			domain_percentages.append({
 				'percent_crawls': 100*(domain_crawl_count/total_crawls),
 				'domain'		: domain,
 				'owner_id'		: owner_id,
 				'owner_name'	: owner_name,
-				'owner_country'	: owner_country
+				'owner_country'	: owner_country,
+				'owner_uses' 	: owner_uses,
+				'owner_platforms': owner_platforms
 			})
 		return domain_percentages
 	# get_3p_domain_percentages

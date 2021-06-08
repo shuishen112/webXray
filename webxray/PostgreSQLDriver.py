@@ -27,8 +27,8 @@ class PostgreSQLDriver:
 
 		# modify this per your install
 		self.db_user = 'postgres'
-		self.db_pass = 'hello'
-		self.db_host = 'localhost'
+		self.db_pass = 'tn7509TNB'
+		self.db_host = 'privacylost.c8vzw9omfzra.ap-northeast-2.rds.amazonaws.com'
 		self.db_port = '5432'
 
 		# the db_prefix can be overridden if you like

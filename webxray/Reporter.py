@@ -275,7 +275,7 @@ class Reporter:
 
 		for tld_filter in self.top_tlds:
 			csv_rows = []
-			csv_rows.append(('percent_total','domain','owner','owner_country', 'owner_lineage'))
+			csv_rows.append(('percent_total','domain','owner','owner_country','owner_uses','owner_platforms','owner_lineage'))
 
 			# get_3p_domain_percentages returns a list, we slice it to get only desired num_results
 			for item in self.analyzer.get_3p_domain_percentages(tld_filter)[:self.num_results]:
@@ -291,6 +291,8 @@ class Reporter:
 					item['domain'],
 					item['owner_name'],
 					item['owner_country'],
+					item['owner_uses'],
+					item['owner_platforms'],
 					lineage_string
 				))
 

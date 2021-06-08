@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-03-29 20:14:44
- * @LastEditTime: 2021-05-21 16:29:42
+ * @LastEditTime: 2021-06-08 11:21:12
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /webXray/README.md
@@ -9,23 +9,39 @@
 # webxray
 
 
-The project is forked by webxray project [https://webxray.org/](https://webxray.org/). We run this software on the Amazon EC2. 
+The project is forked by webxray project [https://webxray.org/](https://webxray.org/).
 
+## Usage
 
-## Environment on Amazon EC2
-If you want to run this tool on Amazon EC2, you need to setup your running environment. I suggest that you use the ubuntu machine.
+The framework of the collecting process is:
 
-### Install google-chrome and google-chromedriver
+![](./fig/collect_data.jpg)
 
+### Website list
+First, we need to know the websites list. Such as:
+
+```
+http://www.google.com
+http://youtube.com
+```
+In this project, we use the [Alexa](https://www.alexa.com/topsites) to obtain the top 1000 websites for each country.
+
+### Running environment
+
+To runing the webxray dataset effectientlly, we need a high-performance computer. Amazon EC2 is a good choice. We need to rent a instance at Amazon platform. It is note that the dataset is stored in database format. To make a convenient access to the dataset, we rent a open Postgres database. 
+
+- EC2 instance
+We suggest that you use the ubuntu machine.
+
+- Install google-chrome and google-chromedriver
 You can find the instruction at [https://webxray.org/](https://webxray.org/)
 
-### Install PostgreSQL
-
-I suggest that you use the Postgresql because you can rent a open Postgresql database in Amazon and you can use it conveniently.
+- Install PostgreSQL
+We suggest that you use the Postgresql because you can rent a open Postgresql database in Amazon and you can use it conveniently.
 
 https://www.postgresql.org/download/linux/ubuntu/
 
-Once you have installed the PostgreSQL, you can run connect to a postgres instance:
+Once you have installed the PostgreSQL, you can connect to a postgres instance:
 
 ```
 sudo su - postgres
@@ -39,8 +55,7 @@ If you want to know the database name and its size in your machine. you can simp
 \l+
 ```
 
-## Running
-
+### Collecting dataset
 If you want to run this script to collect dataset, just type:
 
 ```
@@ -59,15 +74,29 @@ If you want your scirpt running even though you exit the client.
 setsid nohup pythone run_webxray.py --auto_collect > nohup.log 2>&1 &
 ```
 
-## Import dataset to Amazon S3
+# Dataset introduction
 
-Once collecting dataset has been finished, you can upload the dataset to Amazon S3. In this process, you need to give the assess privilege of your EC2 machine to your S3 bucket. Assuming you have finished it.
+In this section, we want to give a detailed introduction about the webxray dataset. The dataset is stored as database format. We create a database for each country.
 
-```
-aws s3 cp yourfile s3://yourS3bucket
-```
+## Table
 
-## Upload your dataset to Amazon PostgreSQL database
+1. crawl_id_domain_lookup
+In this table, there are several important columns. **crawl_id** means the websites we collect successfully. For example, as for the database wbxr_us_top_1000, there are 875 crawl_id in all, which means that some websites failed in our collecting process. **domain** is the tracking third party domain in this websites. **is_cookie** means that whether the third party domain is cookie or not.
 
-It is convenient for you to have a open database so that everyone can use it directly. Amazon PostgreSQL DB instance is a goodl choice.
+2. domain_owner
+**platforms** is the use platform of third party domain. **uses** is the aim of the doamin. **country** is the owner country of the domain.
+
+3. cookie 
+**page_id** is the website. **domain** is the third party domain embedded in this website. **name** is the cookie name of the third party domain.
+
+4. page_id_domain_lookup
+This table is the same as crawl_id_domain_lookup.
+
+## Trackers in Webxray
+
+What is the trackers in webxray dataset?. **Third party domain** can be seen as a rough tracker. **cookies** embedded in the **Third party domain** can be seen as a more meticulour domain.
+
+
+
+
 
