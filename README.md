@@ -1,13 +1,12 @@
 <!--
  * @Author: your name
  * @Date: 2021-03-29 20:14:44
- * @LastEditTime: 2021-06-08 11:21:12
+ * @LastEditTime: 2021-11-03 11:36:21
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /webXray/README.md
 -->
-# webxray
-
+# WebXray
 
 The project is forked by webxray project [https://webxray.org/](https://webxray.org/).
 
@@ -71,7 +70,7 @@ python3 run_webxray.py --auto_collect
 If you want your scirpt running even though you exit the client.
 
 ```
-setsid nohup pythone run_webxray.py --auto_collect > nohup.log 2>&1 &
+setsid nohup python3 run_webxray.py --auto_collect > nohup.log 2>&1 &
 ```
 
 # Dataset introduction
